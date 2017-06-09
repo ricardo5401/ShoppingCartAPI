@@ -1,0 +1,8 @@
+/home/ricardo/Development/asp-net/ShoppingCartApi/bin/Debug/netcoreapp1.1/ShoppingCartApi.deps.json
+/home/ricardo/Development/asp-net/ShoppingCartApi/bin/Debug/netcoreapp1.1/ShoppingCartApi.runtimeconfig.json
+/home/ricardo/Development/asp-net/ShoppingCartApi/bin/Debug/netcoreapp1.1/ShoppingCartApi.runtimeconfig.dev.json
+/home/ricardo/Development/asp-net/ShoppingCartApi/obj/Debug/netcoreapp1.1/ShoppingCartApi.AssemblyInfo.cs
+/home/ricardo/Development/asp-net/ShoppingCartApi/bin/Debug/netcoreapp1.1/ShoppingCartApi.dll
+/home/ricardo/Development/asp-net/ShoppingCartApi/bin/Debug/netcoreapp1.1/ShoppingCartApi.pdb
+/home/ricardo/Development/asp-net/ShoppingCartApi/obj/Debug/netcoreapp1.1/ShoppingCartApi.dll
+/home/ricardo/Development/asp-net/ShoppingCartApi/obj/Debug/netcoreapp1.1/ShoppingCartApi.pdb
