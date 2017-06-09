@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShoppingCartApi.Models;
+using ShoppingCartApi.Data;
 using ShoppingCartApi.Repositories;
 
 namespace ShoppingCartApi.Controllers
