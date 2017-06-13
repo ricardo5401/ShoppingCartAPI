@@ -9,9 +9,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
 using ShoppingCartApi.Models;
+using ShoppingCartApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Npgsql.EntityFrameworkCore.PostgreSQL; 
-using ShoppingCartApi.Data;
 using Swashbuckle.AspNetCore.Swagger;
 using System.IO;
 using Microsoft.AspNetCore.Http;
@@ -60,7 +60,7 @@ namespace ShoppingCartApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, ApiContext context)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -76,6 +76,8 @@ namespace ShoppingCartApi
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "ShoppingCartAPI V1");
             });
+
+            DbInitializer.Initialize(context);
         }
     }
 }
