@@ -10,12 +10,11 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
 using ShoppingCartApi.Models;
 using ShoppingCartApi.Data;
+using ShoppingCartApi.Extensions;
+using ShoppingCartApi.Options;
 using Microsoft.EntityFrameworkCore;
 using Npgsql.EntityFrameworkCore.PostgreSQL; 
 using Swashbuckle.AspNetCore.Swagger;
-using System.IO;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Cors.Internal;
 
 namespace ShoppingCartApi
@@ -54,6 +53,8 @@ namespace ShoppingCartApi
                     });
             });
 
+            services.Configure<TokenOptions>(Configuration.GetSection(nameof(TokenOptions)));
+
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new Info { Title = "shoppingCart API", Version = "v1" });
             });
@@ -65,12 +66,6 @@ namespace ShoppingCartApi
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -78,6 +73,26 @@ namespace ShoppingCartApi
             });
 
             DbInitializer.Initialize(context);
+
+            var options = Configuration.GetSection(nameof(TokenOptions)).Get<TokenOptions>();
+
+            app.UseJwtBearerAuthentication(new JwtBearerOptions
+            {
+                TokenValidationParameters =
+                {
+                    ValidAudience = options.Audience,
+                    ValidIssuer = options.Issuer,
+                    IssuerSigningKey = options.GetSymmetricSecurityKey()
+                }
+            });
+
+            
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+            });
         }
     }
 }
