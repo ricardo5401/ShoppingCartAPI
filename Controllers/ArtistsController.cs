@@ -60,7 +60,7 @@ namespace ShoppingCartApi.Controllers
 
             artistRepo.Update(artist);
 
-            return NoContent();
+            return Ok(artist);
         }
 
         // POST: api/Albums
