@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using ShoppingCartApi.Models;
 using ShoppingCartApi.Repositories;
 
 namespace ShoppingCartApi.Controllers
 {
+    [Authorize]
     [Route("api/Artists")]
     public class ArtistsController : Controller
     {

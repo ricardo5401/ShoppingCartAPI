@@ -22,6 +22,11 @@ namespace ShoppingCartApi.Repositories
             orderRepo = new OrderRepository(context);
         }
 
+        public static ShoppingCartRepository GetCart(ApiContext context)
+        {
+            return new ShoppingCartRepository(context);
+        }
+
         public Cart AddToCart(CartViewModel c)
         {
             return cartRepo.Add(c);
