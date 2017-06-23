@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data;
 using ShoppingCartApi.Models;
+using ShoppingCartApi.ViewModels;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ShoppingCartApi.Repositories
@@ -29,6 +30,11 @@ namespace ShoppingCartApi.Repositories
         public Cart Get(int id)
         {
             return context.Carts.FirstOrDefault( x => x.RecordId == id );
+        }
+
+        public Cart Get(CartViewModel c)
+        {
+            return context.Carts.FirstOrDefault( x => x.AlbumId == c.AlbumId && x.CartId == c.CartId );
         }
 
         public IEnumerable<Cart> GetAll()
