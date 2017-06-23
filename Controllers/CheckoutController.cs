@@ -37,9 +37,28 @@ namespace ShoppingCartApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddressAndPayment(OrderPromoViewModel o)
+        public IActionResult AddressAndPayment([FromBody] Order order, [FromQuery] string ShoppingCartId, [FromQuery] string promoCode)
         {
-            return Ok("");
+            try
+            {
+                order.Username = ShoppingCartId;
+                order.OrderDate = DateTime.Now;
+
+                //Save Order
+                storeDB.Orders.Add(order);
+                storeDB.SaveChanges();
+                //Process the order
+                var cart = ShoppingCartRepository.GetCart(storeDB);
+                var orderVM = new OrderViewModel { ShoppingCartId = ShoppingCartId, OrderId = order.OrderId };
+
+                cart.CreateOrder(orderVM);
+            }
+            catch
+            {
+                //Invalid - redisplay with errors
+                return BadRequest();
+            }
+            return Ok(order);
         }
 
         // GET: /Checkout/Complete
