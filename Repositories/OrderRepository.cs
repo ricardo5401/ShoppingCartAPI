@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data;
 using ShoppingCartApi.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ShoppingCartApi.Repositories
@@ -23,6 +24,11 @@ namespace ShoppingCartApi.Repositories
         {
             Order genre = context.Orders.FirstOrDefault(x => x.OrderId == id);
             context.Orders.Remove(genre);
+        }
+
+        public void Attach(Order order){
+            context.Orders.Attach(order);
+            context.Entry(order).State = EntityState.Modified;
         }
 
         public Order Get(int id)
