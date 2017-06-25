@@ -5,6 +5,7 @@ using System.Data;
 using ShoppingCartApi.Models;
 using ShoppingCartApi.ViewModels;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ShoppingCartApi.Repositories
 {
@@ -30,7 +31,7 @@ namespace ShoppingCartApi.Repositories
                 cart = new Cart
                 {
                     AlbumId = c.AlbumId,
-                    CartId = c.ShoppingCartId,
+                    CartId = c.CartId,
                     Count = 1,
                     DateCreated = DateTime.Now
                 };
@@ -112,15 +113,16 @@ namespace ShoppingCartApi.Repositories
         public IEnumerable<Cart> GetAll(string ShoppingCartId)
         {
             return context.Carts.Where(
-                cart => cart.CartId == ShoppingCartId).ToList();
+                c => c.CartId == ShoppingCartId).ToList();
         }
         public int GetCount(string ShoppingCartId)
         {
             // Get the count of each item in the cart and sum them up
             int? count = (from cartItems in context.Carts
                           where cartItems.CartId == ShoppingCartId
-                          select (int?)cartItems.Count).Sum();
+                          select (int)cartItems.Count).Sum();
             // Return 0 if all entries are null
+            Console.WriteLine("CartRepository, GetCount: " + count);
             return count ?? 0;
         }
         public decimal GetTotal(string ShoppingCartId)

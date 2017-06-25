@@ -8,7 +8,6 @@ namespace ShoppingCartApi.ViewModels
         public int ArtistId { get; set; }
         public string Title { get; set; }
         public decimal Price { get; set; }
-        public string ShoppingCartId { get; set; }
     }
     public class CartDeleteViewModel
     {

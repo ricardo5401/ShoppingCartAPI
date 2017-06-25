@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System;
 
 namespace ShoppingCartApi.Controllers
 {
@@ -13,9 +14,15 @@ namespace ShoppingCartApi.Controllers
     public class ShoppingCartsController : Controller
     {
         private ApiContext storeDB = new ApiContext();
+
+        public ShoppingCartsController(ApiContext context){
+            this.storeDB = context;
+        }
         
-        public IActionResult Index([FromBody] string ShoppingCartId)
+        [HttpGet("{ShoppingCartId}")]
+        public IActionResult Index(string ShoppingCartId)
         {
+            Console.WriteLine("ShoppingCart Index, Id: " + ShoppingCartId);
             var cart = ShoppingCartRepository.GetCart(storeDB);
 
             // Set up our ViewModel
@@ -28,34 +35,34 @@ namespace ShoppingCartApi.Controllers
             return Ok(viewModel);
         }
         
+        [HttpPost("AddToCart")]
         public IActionResult AddToCart([FromBody] CartViewModel c)
         {
-            // Retrieve the album from the database
-            var addedAlbum = storeDB.Albums
-                .Single(album => album.AlbumId == c.AlbumId);
 
-            // Add it to the shopping cart
+            Console.WriteLine("ShoppingCart AddToCard, Id: " + c.CartId);
             var cart = ShoppingCartRepository.GetCart(storeDB);
-
-            cart.AddToCart(c);
-
+            var result = cart.AddToCart(c);
+            Console.WriteLine(result);
             // Go back to the main store page for more shopping
-            return Ok(cart);
+            return Ok(result);
         }
 
-        [HttpPost]
+        [HttpPost("RemoveFromCart")]
         public IActionResult RemoveFromCart([FromBody] CartDeleteViewModel c)
         {
+            Console.WriteLine("ShoppingCart RemoveFromCart, Id: " + c.ShoppingCartId);
             // Remove the item from the cart
             var cart = ShoppingCartRepository.GetCart(storeDB);
 
             // Get the name of the album to display confirmation
-            string albumName = storeDB.Carts
-                .Single(item => item.RecordId == c.RecordId).Album.Title;
-
+            var record = storeDB.Carts
+                .Single(item => item.RecordId == c.RecordId);
+            Console.WriteLine("AlbumId: " + record.AlbumId);
+            var albumName = new AlbumRepository(storeDB).Get(record.AlbumId).Title;
+            Console.WriteLine("Album title: " + albumName);
             // Remove from cart
             int itemCount = cart.RemoveFromCart(c);
-
+            Console.WriteLine("ShoppingCart Controller, itemCount: " + itemCount);
             // Display the confirmation message
             var results = new ShoppingCartRemoveViewModel
             {
@@ -70,10 +77,11 @@ namespace ShoppingCartApi.Controllers
         }
         //
         // GET: /ShoppingCart/CartSummary
-        public IActionResult CartSummary([FromBody] string ShoppingCartId)
+        [HttpGet("CartSummary/{CartId}")]
+        public IActionResult CartSummary(string CartId)
         {
             var cart = ShoppingCartRepository.GetCart(storeDB);
-            return Ok(cart.GetCount(ShoppingCartId));
+            return Ok(cart.GetCount(CartId));
         }
         
     }

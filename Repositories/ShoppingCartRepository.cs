@@ -56,7 +56,6 @@ namespace ShoppingCartApi.Repositories
         {
             decimal orderTotal = 0;
             var order = orderRepo.Get(orderViewModel.OrderId);
-
             var cartItems = GetCartItems(orderViewModel.ShoppingCartId);
 
             foreach (var item in cartItems)
@@ -68,13 +67,9 @@ namespace ShoppingCartApi.Repositories
                     UnitPrice = item.Album.Price,
                     Quantity = item.Count
                 };
-
                 orderTotal += (item.Count * item.Album.Price);
-
                 orderDetailRepo.Add(orderDetail);
-
             }
-
             order.Total = orderTotal;
             orderRepo.Attach(order);
             orderDetailRepo.Save();
