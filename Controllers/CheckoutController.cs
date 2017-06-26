@@ -13,12 +13,17 @@ using ShoppingCartApi.Repositories;
 namespace ShoppingCartApi.Controllers
 {
     [Authorize]
-    [Route("api/Checkouts")]
+    [Route("api/Checkout")]
     public class CheckoutController : Controller
     {
-        private ApiContext storeDB = new ApiContext();
+        private ApiContext storeDB;
         const string PromoCode = "FREE";
 
+        public CheckoutController(ApiContext context){
+            this.storeDB = context;
+        }
+
+        [HttpGet("AddressAndPayment")]
         public IActionResult AddressAndPayment([FromBody] UserViewModel user)
         {
             Order order = new Order();
@@ -36,28 +41,21 @@ namespace ShoppingCartApi.Controllers
             return Ok(order);
         }
 
-        [HttpPost]
-        public IActionResult AddressAndPayment([FromBody] Order order, [FromQuery] string ShoppingCartId, [FromQuery] string promoCode)
+        [HttpPost("AddressAndPayment")]
+        public IActionResult AddressAndPayment([FromBody] OrderFormViewModel model)
         {
-            try
-            {
-                order.Username = ShoppingCartId;
-                order.OrderDate = DateTime.Now;
+            var order = model.order;
+            order.Username = model.shoppingCartId;
+            order.OrderDate = DateTime.Now;
+            Console.WriteLine("AddresPayment - ShoppingCartId: " + model.shoppingCartId);
+            //Save Order
+            storeDB.Orders.Add(order);
+            storeDB.SaveChanges();
+            //Process the order
+            var cart = ShoppingCartRepository.GetCart(storeDB);
+            cart.CreateOrder(order);
 
-                //Save Order
-                storeDB.Orders.Add(order);
-                storeDB.SaveChanges();
-                //Process the order
-                var cart = ShoppingCartRepository.GetCart(storeDB);
-                var orderVM = new OrderViewModel { ShoppingCartId = ShoppingCartId, OrderId = order.OrderId };
-
-                cart.CreateOrder(orderVM);
-            }
-            catch
-            {
-                //Invalid - redisplay with errors
-                return BadRequest();
-            }
+            Console.WriteLine("AddresPayment - OrderId: " + order.OrderId);
             return Ok(order);
         }
 
@@ -77,6 +75,15 @@ namespace ShoppingCartApi.Controllers
             {
                 return BadRequest();
             }
+        }
+
+        [HttpPost("MigrateCart")]
+        public IActionResult MigrateCart([FromBody] MigrateCardViewModel model)
+        {
+            var cart = ShoppingCartRepository.GetCart(storeDB);
+            cart.MigrateCart(model);
+
+            return Ok();
         }
     }
 }

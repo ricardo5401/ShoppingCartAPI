@@ -13,7 +13,7 @@ namespace ShoppingCartApi.Controllers
     [Route("api/ShoppingCarts")]
     public class ShoppingCartsController : Controller
     {
-        private ApiContext storeDB = new ApiContext();
+        private ApiContext storeDB;
 
         public ShoppingCartsController(ApiContext context){
             this.storeDB = context;

@@ -48,6 +48,5 @@ namespace ShoppingCartApi.Models
         public string Email { get; set; }
         [ScaffoldColumn(false)]
         public decimal Total { get; set; }
-        public List<OrderDetail> OrderDetails { get; set; }
     }
 }
