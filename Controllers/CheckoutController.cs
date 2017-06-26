@@ -60,6 +60,8 @@ namespace ShoppingCartApi.Controllers
         }
 
         // GET: /Checkout/Complete
+
+        [HttpGet("Complete")]
         public IActionResult Complete(OrderViewModel order)
         {
             // Validate customer owns this order
