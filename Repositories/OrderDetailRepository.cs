@@ -35,6 +35,11 @@ namespace ShoppingCartApi.Repositories
             return context.OrderDetails.ToList();
         }
 
+        public IEnumerable<OrderDetail> GetAll(int id)
+        {
+            return context.OrderDetails.Where(x => x.OrderId == id).ToList();
+        }
+
         public void Save()
         {
             context.SaveChanges();

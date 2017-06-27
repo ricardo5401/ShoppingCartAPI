@@ -35,6 +35,11 @@ namespace ShoppingCartApi.Repositories
         {
             return context.Orders.FirstOrDefault(x => x.OrderId == id);
         }
+        
+        public IEnumerable<Order> GetAll(string username)
+        {
+            return context.Orders.Where(x => x.Username == username).ToList();
+        }
 
         public IEnumerable<Order> GetAll()
         {

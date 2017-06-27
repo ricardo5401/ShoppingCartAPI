@@ -14,6 +14,11 @@ namespace ShoppingCartApi.ViewModels
         public string shoppingCartId { get; set;}
         public string promoCode { get; set;}
     }
+    public class OrderDetailsViewModel
+    {
+        public Order order { get; set; }
+        public Album album { get; set; }
+    }
 
     public class OrderPromoViewModel
     {
